@@ -184,9 +184,32 @@ a. If the salary is more than 1500 then display “above target”
 b. If the salary is equal to 1500 then display “on the target”
 c. If the salary is less than 1500 then display “below the target”
 
+SQL>  select ename,sal,
+  2   case
+  3   when sal = 1500 then 'ON TARGET'
+  4   when sal < 1500 then 'BELOW 1500'
+  5   when sal > 1500 then 'JUST SALARY'
+  6   end
+  7   from emp;
 
+ENAME             SAL CASEWHENSAL
+---------- ---------- -----------
+SMITH             800 BELOW 1500
+ALLEN            1600 JUST SALARY
+WARD             1250 BELOW 1500
+JONES            2975 JUST SALARY
+MARTIN           1250 BELOW 1500
+BLAKE            2850 JUST SALARY
+CLARK            2450 JUST SALARY
+SCOTT            3000 JUST SALARY
+KING             5000 JUST SALARY
+TURNER           1500 ON TARGET
+ADAMS            1100 BELOW 1500
+JAMES             950 BELOW 1500
+FORD             3000 JUST SALARY
+MILLER           1300 BELOW 1500
 
-
+14 rows selected.
 
 
 
@@ -212,10 +235,32 @@ TO_CHAR(SYS
 
 12. Find all employees who earn a salary greater than the average salary of their departments.
 
+SQL> select ename from emp,dept where sal>all(select avg(sal) from emp group by deptno);
+
+ENAME
+----------
+JONES
+SCOTT
+KING
+FORD
+JONES
+SCOTT
+KING
+FORD
+JONES
+SCOTT
+KING
+FORD
+JONES
+SCOTT
+KING
+FORD
+
+16 rows selected.
 
 
 
-ed
+
 
 
 13. Write a query to find the name of the manager and number of sub-ordinates.
