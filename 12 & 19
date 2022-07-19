@@ -235,29 +235,14 @@ TO_CHAR(SYS
 
 12. Find all employees who earn a salary greater than the average salary of their departments.
 
-SQL> select ename from emp,dept where sal>all(select avg(sal) from emp group by deptno);
+SQL> select distinct(ename) from emp,dept where sal>all(select avg(sal) from emp group by deptno);
 
 ENAME
 ----------
-JONES
-SCOTT
-KING
 FORD
 JONES
-SCOTT
 KING
-FORD
-JONES
 SCOTT
-KING
-FORD
-JONES
-SCOTT
-KING
-FORD
-
-16 rows selected.
-
 
 
 
