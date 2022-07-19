@@ -280,6 +280,13 @@ FORD
 
 15. Write a query to find out the top three earners.
 
+SQL> select e1.ename from emp e1 where(select count(*) from emp e2 where e2.sal>e1.sal)<3;
+
+ENAME
+----------
+KING
+FORD
+SCOTT
 
 
 
