@@ -48,9 +48,6 @@ MILLER     CLERK           1300
 
 
 
-
-
-
 Write Select statements for the following queries using SQL single row functions:
 1. Display the department names in the lower case but the initial must be in uppercase.
 
@@ -66,6 +63,9 @@ It
 Cse
 
 6 rows selected.
+
+
+
 
 
 2. Determine the ‘ename’, ‘job’, ‘sal’ rename the title as Job-sal the output must be Job-Sal as
@@ -93,6 +93,8 @@ MILLER[CLERK] RS.1300
 
 
 
+
+
 3. For each department, Count the number of times S occurs in department names.
 SQL> select dname,(length(dname)-length(replace(upper(dname),'S',''))) count_of_s from dept;
 
@@ -109,6 +111,8 @@ cse                     1
 
 
 
+
+
 4. Write a query to display the department name which does not contain any employees
 SQL> (select distinct(dname) from dept)MINUS(select distinct(dname) from dept d,emp e where d.deptno
 =e.deptno);
@@ -118,6 +122,8 @@ DNAME
 OPERATIONS
 cse
 it
+
+
 
 
 
@@ -136,12 +142,15 @@ ire
 
 
 
+
 6. Write an SQL statement to convert the current date to new date picture ex: MONDAY 10th
 June 2005 10:30.00 PM
 SQL> select to_char(sysdate,'dayddth month yyyy hh:mm:ss AM') dates from dual;
 DATES
 ----------------------------------------
 tuesday  12th july      2022 02:07:28 PM
+
+
 
 
 
@@ -214,10 +223,9 @@ MILLER           1300 BELOW 1500
 
 
 
+
 10. Display all employee names, employee number, department names &amp; salary grades for
 all employees who are working in department 30.
-
-
 
 
 
@@ -229,6 +237,7 @@ SQL> select to_char(sysdate,'HH:MI:SS AM') from dual;
 TO_CHAR(SYS
 -----------
 04:17:46 PM
+
 
 
 
@@ -250,14 +259,19 @@ SCOTT
 
 13. Write a query to find the name of the manager and number of sub-ordinates.
 
+SQL> select e.ename,count(t.job) from emp e,emp t where e.job='MANAGER' and e.empno=t.mgr group by e
+.ename;
 
+ENAME      COUNT(T.JOB)
+---------- ------------
+BLAKE                 5
+CLARK                 1
+JONES                 2
 
 
 
 
 14. Write a query to find out the manager having Maximum number of sub-ordinates.
-
-
 
 
 
@@ -294,5 +308,13 @@ and No. of Employees.
 18. Write a query which will return the DAY of the week.(ie. MONDAY), for any date entered in
 the format: DD.MM.YY.
 
+SQL> SELECT TO_CHAR(to_date('&date' ,'dd-mm-yyyy'),'DAY') FROM dual;
+Enter value for date: 20-07-2022
+old   1: SELECT TO_CHAR(to_date('&date' ,'dd-mm-yyyy'),'DAY') FROM dual
+new   1: SELECT TO_CHAR(to_date('20-07-2022' ,'dd-mm-yyyy'),'DAY') FROM dual
+
+TO_CHAR(T
+---------
+WEDNESDAY
 
 
