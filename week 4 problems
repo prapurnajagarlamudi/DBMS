@@ -31,7 +31,11 @@ Kim
 
 
 3. Find the departments that have the highest average salary.
+SQL> SELECT dept_name FROM instructor GROUP BY dept_name having avg(salary)=(SELECT max(avg(salary)) FROM instructor GROUP BY dept_name);
 
+DEPT_NAME
+--------------------
+Physics
 
 
 
