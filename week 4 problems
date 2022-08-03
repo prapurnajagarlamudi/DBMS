@@ -12,7 +12,20 @@ COUNT(DISTINCTID)
 
 2. Find the names of all instructors whose salary is greater than at least one
 instructor in the Biology department
+SQL> select name from (select i1.name from instructor i1,instructor i2 where i1.salary>i2.salary and
+ i2.dept_name='Biology');
 
+NAME
+--------------------
+Wu
+Einstein
+Gold
+Katz
+Singh
+Brandt
+Kim
+
+7 rows selected.
 
 
 
