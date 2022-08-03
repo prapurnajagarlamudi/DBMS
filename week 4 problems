@@ -2,7 +2,10 @@ II. Write nested queries for answering the following queries that retrieve data 
 university database:
 1. Find the total number of (distinct) students who have taken course
 sections taught by the instructor with ID 110011
-
+SQL>select count(distinct id) from (select ta.id from teaches t,takes ta,course c where t.course_id=c.course_id and t.course_id=ta.course_id and t.id='110011');
+COUNT(DISTINCTID)
+-----------------
+                0
 
 
 
