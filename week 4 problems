@@ -42,8 +42,11 @@ Physics
 
 4. Find all the courses taught in the both the Fall 2009 and Spring 2010
 semesters
+SQL> select course_id from teaches where semester='Fall' and year=2009 and course_id in (select course_id from teaches where semester='Spring' and year=2010);
 
-
+COURSE_I
+--------
+CS-101
 
 
 
