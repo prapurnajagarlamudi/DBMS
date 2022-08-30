@@ -1,0 +1,74 @@
+
+
+
+
+5.	Write a Pl/SQL program using FOR loop to insert ten rows into a database table.
+
+SQL> create table t ( x int, y char(50) );
+
+Table created.
+
+SQL> 
+  1  BEGIN
+  2     for i in 1..10 LOOP
+  3             insert into t values(i,'x');
+  4     END LOOP;
+  5* END;
+SQL> /
+
+PL/SQL procedure successfully completed.
+SQL> select * from t;
+
+         X Y
+---------- --------------------------------------------------
+         1 x
+         2 x
+         3 x
+         4 x
+         5 x
+         6 x
+         7 x
+         8 x
+         9 x
+        10 x
+
+10 rows selected.
+
+SQL> select count(*) from t;
+
+  COUNT(*)
+----------
+        10
+        
+        
+        
+    
+6.Consider the following relation schemas
+Inventory
+    Product_ID	Product_name	Quantity
+
+Purchase_Record
+    Product_ID	Status	Date
+Write a PL/SQL block to read the quantity of a product from inventory and if it is > 0 reduce the quantity by 1 
+and record the status of purchase of that product as ‘PURCHASED’. Otherwise record the status of purchase of that 
+product as ‘OUT OF STOCK’. While recording the status of a purchase, record the date of transaction.
+
+SQL>
+
+
+
+
+
+7.	Create a table employee with eno, ename, and basic_pay attributes, insert 3 to 4 records and 
+write a PL/SQL block to calculate the Gross salary & Net salary for an employee for the following conditions:
+	HRA is 15% of basic.
+	DA is 62% of basic.
+	PF is 780/- if gross salary exceeds 8000, otherwise 600/-.
+	Professional tax is 2% of basic.
+and then print the employee no, name, hra, da, pf, ptax, gross salary & net salary for that employee.
+
+SQL>
+
+
+
+
