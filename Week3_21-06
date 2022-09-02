@@ -433,18 +433,65 @@ Katz
 
 
 5. Find instructor names and course identifiers for instructors in the Computer Science department.
+SQL> select i.name,t.course_id from instructor i,teaches t where dept_name='Comp. Sci.' and i.id=t.id;
 
+NAME                 COURSE_I
+-------------------- --------
+Srinivasan           CS-101
+Srinivasan           CS-315
+Srinivasan           CS-347
+Katz                 CS-101
+Katz                 CS-319
+Brandt               CS-190
+Brandt               CS-190
+Brandt               CS-319
+
+8 rows selected.
 
 
 
 6. For all instructors in the university who have taught some course, find their names and the course ID of all courses they taught.
+SQL> select name,course_id from instructor i,teaches t where t.id=i.id;
+
+NAME                 COURSE_I
+-------------------- --------
+Srinivasan           CS-101
+Srinivasan           CS-315
+Srinivasan           CS-347
+Wu                   FIN-201
+Mozart               MU-199
+Einstein             PHY-101
+El Said              HIS-351
+Katz                 CS-101
+Katz                 CS-319
+Crick                BIO-101
+Crick                BIO-301
+Brandt               CS-190
+Brandt               CS-190
+Brandt               CS-319
+Kim                  EE-181
+
+15 rows selected.
 
 
 
 
 7. Find the names of all instructors whose salary is greater than at least one instructor in the Biology department. Or Find the names of all instructors who
 earn more than the lowest paid instructor in the Biology department.
+SQL> select i1.name from instructor i1,instructor i2 where i1.salary>i2.salary and i2.dept_name='Bio
+logy';
 
+NAME
+--------------------
+Wu
+Einstein
+Gold
+Katz
+Singh
+Brandt
+Kim
+
+7 rows selected.
 
 
 
@@ -455,22 +502,59 @@ earn more than the lowest paid instructor in the Biology department.
 
 
 9. Find the instructor names and the courses they taught for all instructors in the Biology department who have taught some course.
+SQL> select name,course_id from instructor i,teaches t where i.id=t.id and dept_name='Biology';
 
+NAME                 COURSE_I
+-------------------- --------
+Crick                BIO-101
+Crick                BIO-301
 
 
 
 10. Find the set of all courses taught either in Fall 2009 or in Spring 2010, or both.
+SQL> (select course_id from teaches where semester='Fall' and year='2009') UNION (select course_id f
+rom teaches where semester='Spring' and year='2010');
 
+COURSE_I
+--------
+CS-101
+CS-315
+CS-319
+CS-347
+FIN-201
+HIS-351
+MU-199
+PHY-101
+
+8 rows selected.
 
 
 
 11. Find all courses taught in the Fall 2009 semester but not in the Spring 2010 semester.
+SQL> (select course_id from teaches where semester='Fall' and year='2009') MINUS (select course_id f
+rom teaches where semester='Spring' and year='2010');
 
+COURSE_I
+--------
+CS-347
+PHY-101
 
 
 
 12. Find the names of all students who have taken any Comp. Sci. course ever.(there should be no duplicate names)
+SQL> select distinct name from student s,takes t where s.id=t.id and course_id in ('CS-101','CS-190'
+,'CS-315','CS-319','CS-347');
 
+NAME
+--------------------
+Zhang
+Brown
+Bourikas
+Shankar
+Levy
+Williams
+
+6 rows selected.
 
 
 
