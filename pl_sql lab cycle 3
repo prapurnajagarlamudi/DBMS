@@ -53,7 +53,65 @@ Write a PL/SQL block to read the quantity of a product from inventory and if it 
 and record the status of purchase of that product as ‘PURCHASED’. Otherwise record the status of purchase of that 
 product as ‘OUT OF STOCK’. While recording the status of a purchase, record the date of transaction.
 
-SQL>
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2     q number;
+  3     id number:=&id;
+  4  BEGIN
+  5     select quantity into q from inventory where id=product_id;
+  6     IF q>0 THEN
+  7             q:=q-1;
+  8             insert into purchase_record values (id,'PURCHASED',sysdate);
+  9             update inventory set quantity=q where id=product_id;
+ 10     ELSE
+ 11             insert into purchase_record values (id,'OUT OF STOCK',sysdate);
+ 12     END IF;
+ 13* END;
+SQL> /
+Enter value for id: 1001
+old   3:        id number:=&id;
+new   3:        id number:=1001;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from inventory;
+
+PRODUCT_ID PRODUCT_NA   QUANTITY
+---------- ---------- ----------
+      1001 pen                 1
+      1002 pencil              1
+      1003 eraser              0
+
+SQL> select * from purchase_record;
+
+PRODUCT_ID STATUS     P_DATE
+---------- ---------- ---------
+      1001 PURCHASED  07-SEP-22
+      
+SQL> /
+Enter value for id: 1002
+old   3:    id number:=&id;
+new   3:    id number:=1002;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from inventory;
+
+PRODUCT_ID PRODUCT_NA   QUANTITY
+---------- ---------- ----------
+      1001 pen                 1
+      1002 pencil              0
+      1003 eraser              0
+
+SQL> select * from purchase_record;
+
+PRODUCT_ID STATUS     P_DATE
+---------- ---------- ---------
+      1001 PURCHASED  07-SEP-22
+      1002 PURCHASED  07-SEP-22
+      1002 PURCHASED  07-SEP-22
 
 
 
@@ -67,8 +125,331 @@ write a PL/SQL block to calculate the Gross salary & Net salary for an employee 
 	Professional tax is 2% of basic.
 and then print the employee no, name, hra, da, pf, ptax, gross salary & net salary for that employee.
 
-SQL>
+SQL> create table employee
+  2  (
+  3  eno number,
+  4  ename varchar(10),
+  5  b_p number
+  6  )
+  7  ;
+
+Table created.
+
+SQL> insert into employee values (1000,'keerthi',200000);
+
+1 row created.
+
+SQL> insert into employee values (1001,'madhavi',210000);
+
+1 row created.
+
+SQL> insert into employee values (1002,'satwika',220000);
+
+1 row created.
+
+SQL> insert into employee values (1003,'prapurna',230000);
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2     hra number;
+  3     da number;
+  4     pf number;
+  5     pt number;
+  6     bp number;
+  7     gs number;
+  8     ns number;
+  9     id number:=&id;
+ 10     empno number;
+ 11     empname varchar(10);
+ 12  BEGIN
+ 13     select b_p,eno,ename into bp,empno,empname from employee where id=eno;
+ 14     hra:=0.15*bp;
+ 15     da:=0.62*bp;
+ 16     gs:=bp+hra+da;
+ 17     IF gs>8000 THEN
+ 18             pf:=780;
+ 19     ELSE
+ 20             pf:=600;
+ 21     END IF;
+ 22     pt:=0.02*bp;
+ 23     ns:=bp-gs-pt;
+ 24     DBMS_OUTPUT.PUT_LINE(empno||' '||empname||' '||bp||' '||hra||' '||da||' '||pf||' '||gs||' '||ns)
+ 25* END;
+SQL> /
+Enter value for id: 1000
+old   9:    id number:=&id;
+new   9:    id number:=1000;
+1000 keerthi 200000 30000 124000 780 354000 -158000
+
+PL/SQL procedure successfully completed.
+
+SQL> /
+Enter value for id: 1001
+old   9:    id number:=&id;
+new   9:    id number:=1001;
+1001 madhavi 210000 31500 130200 780 371700 -165900
+
+PL/SQL procedure successfully completed.
 
 
 
 
+
+8.	Consider the following relation schemas
+Emp
+empid	name	salary	dno
+Del_History
+dno	Rows_deleted	date
+Write a PL/SQL block to delete records of all employees who belong to a particular department and then record the dno, no of rows deleted
+and date on which deletion occurred in the Del_History table using implicit cursors. 
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  create table emp1
+  2  (
+  3  empid number,
+  4  name varchar(10),
+  5  salary number,
+  6* dno number)
+SQL> /
+
+Table created.
+
+SQL> create table del_history
+  2  (
+  3  dno number,
+  4  rows_deleted number,
+  5  d_of_j date);
+
+Table created.
+
+SQL> insert into emp1 values (100,'keerthi',100000,1);
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into emp1 values (101,'madhavi',100000,1)
+SQL> /
+
+1 row created.
+
+SQL> insert into emp1 values (102,'satwika',100000,1)'
+  2  ed
+  3  
+SQL> 
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into emp1 values (102,'satwika',100000,1)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into emp1 values (103,'prapurna',100000,2)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into emp1 values (104,'nithya',100000,3)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2     dn number:=&dn;
+  3     c number;
+  4  BEGIN
+  5     delete from emp1 where dno=dn;
+  6     IF sql%found THEN
+  7             c:=sql%rowcount;
+  8             insert into del_history values(dn,c,sysdate);
+  9     END IF;
+ 10* END;
+SQL> /
+Enter value for dn: 1
+old   2:    dn number:=&dn;
+new   2:    dn number:=1;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from del_history;
+
+       DNO ROWS_DELETED D_OF_J
+---------- ------------ ---------
+         1            3 07-SEP-22
+
+
+
+
+9.	Given the table EMPLOYEE (EmpNo, Name, Salary, Designation, DeptID) write a cursor to select the five highest and lowest paid employees from the table.
+
+SQL> create table employee1
+  2  (
+  3  empno number,
+  4  name varchar(10),
+  5  salary number,
+  6  designation varchar(10),
+  7  deptid number);
+
+Table created.
+
+SQL> insert into employee1 values (100,'keerthi',10000,'ceo',1);
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into employee1 values (101,'madhavi',10000,'manager',2)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into employee1 values (102,'satwika',10000,'hr',3)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into employee1 values (103,'prapurna',10000,'hr',4)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into employee1 values (104,'nithya',10000,'hr',5)
+  2  /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into employee1 values (105,'chandu',10000,'manager',6)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into employee1 values (106,'siri',10000,'emp',6)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into employee1 values (107,'yamini',13000,'emp',7)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into employee1 values (108,'rishi',18000,'emp',8)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into employee1 values (109,'neha',19000,'emp',8)
+SQL> /
+
+1 row created.
+
+SQL> select * from employee1;
+
+     EMPNO NAME           SALARY DESIGNATIO     DEPTID
+---------- ---------- ---------- ---------- ----------
+       100 keerthi         10000 ceo                 1
+       101 madhavi         10000 manager             2
+       102 satwika         10000 hr                  3
+       103 prapurna        10000 hr                  4
+       104 nithya          10000 hr                  5
+       105 chandu          10000 manager             6
+       106 siri            10000 emp                 6
+       107 yamini          13000 emp                 7
+       108 rishi           18000 emp                 8
+       109 neha            19000 emp                 8
+
+10 rows selected.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2     i number:=1;
+  3     n varchar(10);
+  4     s number;
+  5     cursor h_n is select name,salary from employee1 order by salary;
+  6  BEGIN
+  7     open h_n;
+  8     LOOP
+  9             fetch h_n into n,s;
+ 10             dbms_output.put_line(n||s);
+ 11             i:=i+1;
+ 12             exit when i>5;
+ 13     end loop;
+ 14* END;
+SQL> /
+keerthi10000
+madhavi10000
+satwika10000
+prapurna10000
+nithya10000
+
+PL/SQL procedure successfully completed.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2     i number:=1;
+  3     n varchar(10);
+  4     s number;
+  5     cursor h_n is select name,salary from employee1 order by salary desc;
+  6  BEGIN
+  7     open h_n;
+  8     LOOP
+  9             fetch h_n into n,s;
+ 10             dbms_output.put_line(n||s);
+ 11             i:=i+1;
+ 12             exit when i>5;
+ 13     end loop;
+ 14* END;
+SQL> /
+neha19000
+rishi18000
+yamini13000
+keerthi10000
+madhavi10000
+
+PL/SQL procedure successfully completed.
