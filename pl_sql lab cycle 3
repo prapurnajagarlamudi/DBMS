@@ -1,3 +1,202 @@
+1.	Write a PL/SQL block to read a number and check whether it is a palindrome or not.
+
+DECLARE
+n NUMBER;
+m NUMBER;
+d NUMBER;
+sum1 NUMBER:=0;
+BEGIN
+n:=&n;
+m:=n;
+WHILE (n>0) LOOP
+d:=mod(n,10);
+sum1:=(sum1*10)+d;
+n:=trunc(n/10);
+END LOOP;
+
+IF(m=sum1) THEN
+DBMS_OUTPUT.PUT_LINE('It is a palindrome');
+ELSE
+DBMS_OUTPUT.PUT_LINE('It is not a palindrome');
+END IF;
+END;
+
+
+SQL> @C:\Users\exam2\Desktop\PL_SQL\palin.sql;
+ 21  /
+Enter value for n: 234
+old   7:        n:=&n;
+new   7:        n:=234;
+It is not a palindrome
+
+PL/SQL procedure successfully completed.
+
+SQL> /
+Enter value for n: 121
+old   7:        n:=&n;
+new   7:        n:=121;
+It is a palindrome
+
+PL/SQL procedure successfully completed.
+
+
+
+
+2.	Write a PL/SQL Program to print the first n fibonacci numbers.
+
+DECLARE
+f0 NUMBER:=0;
+f1 NUMBER:=1;
+f2 NUMBER;
+n NUMBER;
+i NUMBER;
+BEGIN
+DBMS_OUTPUT.PUT_LINE(f0);
+DBMS_OUTPUT.PUT_LINE(f1);
+n:=&n;
+FOR i in 3..n LOOP
+f2:=f0+f1;
+f0:=f1;
+f1:=f2;
+DBMS_OUTPUT.PUT_LINE(f2);
+END LOOP;
+END;
+
+SQL> @C:\Users\exam2\Desktop\PL_SQL\fiba.sql;
+ 21  /
+Enter value for n: 5
+old  10:        n:=&n;
+new  10:        n:=5;
+0
+1
+1
+2
+3
+
+PL/SQL procedure successfully completed.
+
+SQL> /
+Enter value for n: 9
+old  10:        n:=&n;
+new  10:        n:=9;
+0
+1
+1
+2
+3
+5
+8
+13
+21
+
+PL/SQL procedure successfully completed.
+
+
+
+
+3.	Write a PL/SQL block which will accept a number and checks if it is a prime number or not. 
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2     n number:=&n;
+  3     flag number:=0;
+  4  BEGIN
+  5     FOR i in 2..n/2 LOOP
+  6             IF mod(n,i)=0 THEN
+  7                     flag:=flag+1;
+  8             ELSE
+  9                     flag:=0;
+ 10             END IF;
+ 11     END LOOP;
+ 12     IF flag=0 THEN
+ 13             dbms_output.put_line('It is a prime number');
+ 14     ELSE
+ 15             dbms_output.put_line('It is not a prime number');
+ 16     END IF;
+ 17* END;
+ 
+SQL> /
+Enter value for n: 37
+old   2:        n number:=&n;
+new   2:        n number:=37;
+It is a prime number
+
+PL/SQL procedure successfully completed.
+
+SQL> /
+Enter value for n: 12
+old   2:        n number:=&n;
+new   2:        n number:=12;
+It is not a prime number
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+4.	Write a PL/SQL block which will accept two numbers and find out their LCM and HCF. The output should be stored in a table called DEMO_TAB.
+DEMO_TAB
+Number1	Number2	LCM	HCF
+
+CREATE TABLE table_name
+( 
+  n1 NUMBER,
+  n2 NUMBER,
+  hcf NUMBER,
+  lcm NUMBER
+);
+
+DECLARE
+ n1 NUMBER:=&n1;
+ n2 NUMBER:=&n2;
+ p NUMBER;
+ q NUMBER;
+ t NUMBER;
+ lcm NUMBER;
+ hcf NUMBER;
+BEGIN
+  p:=n1;
+  q:=n2;
+  WHILE mod(n2,n1)!=0 LOOP
+     t:=mod(n2,n1);
+     n2:=n1;
+     n1:=t;
+  END LOOP;
+hcf:=n1;
+lcm:=(p*q)/hcf;
+DBMS_OUTPUT.PUT_LINE('LCM OF '||p ||'and'||q ||'is:'|| lcm);
+DBMS_OUTPUT.PUT_LINE('HCF OF '||p ||'and'||q ||'is:'|| hcf);
+INSERT INTO table_name
+(n1, n2, hcf , lcm )
+VALUES
+(p , q , hcf , lcm );
+END;
+/
+
+SQL> @C:\Users\acer\OneDrive\Desktop\4th.sql;
+
+Table created.
+
+Enter value for n1: 12
+old   2:  n1 NUMBER:=&n1;
+new   2:  n1 NUMBER:=12;
+Enter value for n2: 2
+old   3:  n2 NUMBER:=&n2;
+new   3:  n2 NUMBER:=2;
+LCM OF 12and2is:12
+HCF OF 12and2is:2
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from table_name;
+
+        N1         N2        HCF        LCM
+---------- ---------- ---------- ----------
+        12          2          2         12
+
 
 
 
@@ -453,3 +652,131 @@ keerthi10000
 madhavi10000
 
 PL/SQL procedure successfully completed.
+
+
+
+
+10.	Consider the following relation schemas
+
+Bank_Main
+Acc_no	Name	Address	Acc-type	Curr_balance
+Bank_Trans
+Acc_no	Tr_type	Tr_date	Tr_amt	Upd_flag
+
+Where acc_type is S – savings C- current 
+Tr_type is D – deposit W – withdrawal 
+Write a PL/SQL block to update master table’s (i.e., Bank_Main) curr_balance field with transaction details from transaction file (i.e., Bank_Trans)
+and also change the status of the Upd_flag field of transaction table to ‘Y’ once the updation is complete.
+
+
+
+
+
+11.	Write a PL/SQL block to handle the following built-in exceptions
+no_data_found
+too_many_rows
+zero_divide
+
+SQL> select * from instructor;
+
+ID    NAME                 DEPT_NAME                SALARY
+----- -------------------- -------------------- ----------
+10101 Srinivasan           Comp. Sci.                65000
+12121 Wu                   Finance                   90000
+15151 Mozart               Music                     40000
+22222 Einstein             Physics                   95000
+32343 El Said              History                   60000
+33456 Gold                 Physics                   87000
+45565 Katz                 Comp. Sci.                75000
+58583 Califieri            History                   62000
+76543 Singh                Finance                   80000
+76766 Crick                Biology                   72000
+83821 Brandt               Comp. Sci.                92000
+
+ID    NAME                 DEPT_NAME                SALARY
+----- -------------------- -------------------- ----------
+98345 Kim                  Elec. Eng.                80000
+
+12 rows selected.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2     n number:=10;
+  3     m number;
+  4     i instructor.id%type;
+  5  BEGIN
+  6     select id into i from instructor;
+  7     m:=n/0;
+  8     select id into i from instructor where name='prapurna';
+  9     EXCEPTION
+ 10             WHEN TOO_MANY_ROWS THEN
+ 11     DBMS_OUTPUT.PUT_LINE('more than one row selected');
+ 12             WHEN ZERO_DIVIDE THEN
+ 13     DBMS_OUTPUT.PUT_LINE('divided by zero');
+ 14             WHEN NO_DATA_FOUND THEN
+ 15     DBMS_OUTPUT.PUT_LINE('no data found');
+ 16* END;
+SQL> /
+more than one row selected
+
+PL/SQL procedure successfully completed.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2     n number:=10;
+  3     m number;
+  4     i instructor.id%type;
+  5  BEGIN
+  6     m:=n/0;
+  7     select id into i from instructor;
+  8     select id into i from instructor where name='prapurna';
+  9     EXCEPTION
+ 10             WHEN TOO_MANY_ROWS THEN
+ 11     DBMS_OUTPUT.PUT_LINE('more than one row selected');
+ 12             WHEN ZERO_DIVIDE THEN
+ 13     DBMS_OUTPUT.PUT_LINE('divided by zero');
+ 14             WHEN NO_DATA_FOUND THEN
+ 15     DBMS_OUTPUT.PUT_LINE('no data found');
+ 16* END;
+SQL> /
+divided by zero
+
+PL/SQL procedure successfully completed.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2     n number:=10;
+  3     m number;
+  4     i instructor.id%type;
+  5  BEGIN
+  6     select id into i from instructor where name='prapurna';
+  7     m:=n/0;
+  8     select id into i from instructor;
+  9     EXCEPTION
+ 10             WHEN TOO_MANY_ROWS THEN
+ 11     DBMS_OUTPUT.PUT_LINE('more than one row selected');
+ 12             WHEN ZERO_DIVIDE THEN
+ 13     DBMS_OUTPUT.PUT_LINE('divided by zero');
+ 14             WHEN NO_DATA_FOUND THEN
+ 15     DBMS_OUTPUT.PUT_LINE('no data found');
+ 16* END;
+SQL> /
+no data found
+
+PL/SQL procedure successfully completed.
+
+
+
+
+12.	Write a PL/SQL block to check whether the quantity of any product in Inventory table is < 0. If so, using an exception display
+relevant message and update quantity to 0.
+
+Inventory
+Product_ID	Product_name	Quantity
+
