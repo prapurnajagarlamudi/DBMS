@@ -40,7 +40,7 @@ It is a palindrome
 PL/SQL procedure successfully completed.
 
 
-
+_________________________________________________________________________________________________________________________
 
 2.	Write a PL/SQL Program to print the first n fibonacci numbers.
 
@@ -92,7 +92,7 @@ new  10:        n:=9;
 PL/SQL procedure successfully completed.
 
 
-
+_________________________________________________________________________________________________________________________
 
 3.	Write a PL/SQL block which will accept a number and checks if it is a prime number or not. 
 
@@ -135,7 +135,7 @@ PL/SQL procedure successfully completed.
 
 
 
-
+_________________________________________________________________________________________________________________________
 
 4.	Write a PL/SQL block which will accept two numbers and find out their LCM and HCF. The output should be stored in a table called DEMO_TAB.
 DEMO_TAB
@@ -199,7 +199,7 @@ SQL> select * from table_name;
 
 
 
-
+_________________________________________________________________________________________________________________________
 
 5.	Write a Pl/SQL program using FOR loop to insert ten rows into a database table.
 
@@ -240,7 +240,7 @@ SQL> select count(*) from t;
         10
         
         
-        
+_________________________________________________________________________________________________________________________       
     
 6.Consider the following relation schemas
 Inventory
@@ -314,7 +314,7 @@ PRODUCT_ID STATUS     P_DATE
 
 
 
-
+_________________________________________________________________________________________________________________________
 
 7.	Create a table employee with eno, ename, and basic_pay attributes, insert 3 to 4 records and 
 write a PL/SQL block to calculate the Gross salary & Net salary for an employee for the following conditions:
@@ -396,7 +396,7 @@ PL/SQL procedure successfully completed.
 
 
 
-
+_________________________________________________________________________________________________________________________
 
 8.	Consider the following relation schemas
 Emp
@@ -495,6 +495,7 @@ SQL> select * from del_history;
 
 
 
+_________________________________________________________________________________________________________________________
 
 9.	Given the table EMPLOYEE (EmpNo, Name, Salary, Designation, DeptID) write a cursor to select the five highest and lowest paid employees from the table.
 
@@ -654,7 +655,7 @@ madhavi10000
 PL/SQL procedure successfully completed.
 
 
-
+_________________________________________________________________________________________________________________________
 
 10.	Consider the following relation schemas
 
@@ -668,9 +669,49 @@ Tr_type is D – deposit W – withdrawal
 Write a PL/SQL block to update master table’s (i.e., Bank_Main) curr_balance field with transaction details from transaction file (i.e., Bank_Trans)
 and also change the status of the Upd_flag field of transaction table to ‘Y’ once the updation is complete.
 
+SQL> create table bank_main(acc_no number,name varchar(20),address varchar(30),acc_type varchar(10),
+curr_bal number);
+
+Table created.
+
+SQL> create table bank_trans(acc_no number,tr_type varchar(10),tr_date Date,tr_amt number,upd_flag v
+archar(5));
+
+Table created.
+
+SQL> insert into bank_main values(1001,'prapurna','guntur','current',100000);
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into bank_main values(1002,'madhavi','nrt','savings',103000)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into bank_main values(1003,'keerthi','satenapalli','deposit',103030)
+SQL> /
+
+1 row created.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1* insert into bank_main values(1004,'satwika','tenali','check',102320)
+SQL> /
+
+1 row created.
 
 
 
+
+
+_________________________________________________________________________________________________________________________
 
 11.	Write a PL/SQL block to handle the following built-in exceptions
 no_data_found
@@ -773,6 +814,7 @@ PL/SQL procedure successfully completed.
 
 
 
+_________________________________________________________________________________________________________________________
 
 12.	Write a PL/SQL block to check whether the quantity of any product in Inventory table is < 0. If so, using an exception display
 relevant message and update quantity to 0.
@@ -780,3 +822,78 @@ relevant message and update quantity to 0.
 Inventory
 Product_ID	Product_name	Quantity
 
+SQL> create table inventory(product_id number,product_name varchar(10),quantity number);
+
+Table created.
+
+SQL> insert into inventory values (1001,'pen',10);
+
+1 row created.
+
+SQL> insert into inventory values (1002,'pencil',0);
+
+1 row created.
+
+SQL> insert into inventory values (1003,'eraser',-1);
+
+1 row created.
+
+SQL> insert into inventory values (1004,'scale',10);
+
+1 row created.
+
+SQL> select * from inventory;
+
+PRODUCT_ID PRODUCT_NA   QUANTITY
+---------- ---------- ----------
+      1001 pen                10
+      1002 pencil              0
+      1003 eraser             -1
+      1004 scale              10
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1   DECLARE
+  2      qty number;
+  3      id number:=&id;
+  4      qty_exception exception;
+  5   BEGIN
+  6      select quantity into qty from inventory where product_id=id;
+  7      IF qty<0 THEN raise qty_exception;
+  8      END IF;
+  9  EXCEPTION
+ 10       WHEN qty_exception THEN
+ 11            DBMS_OUTPUT.PUT_LINE('quantity cannot be negative');
+ 12            update inventory set quantity=0;
+ 13* END;
+SQL> /
+Enter value for id: 1003
+old   3:     id number:=&id;
+new   3:     id number:=1003;
+quantity cannot be negative
+
+PL/SQL procedure successfully completed.
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2      qty number;
+  3      id number:=&id;
+  4      qty_exception exception;
+  5  BEGIN
+  6      select quantity into qty from inventory where product_id=id;
+  7      IF qty<0 THEN raise qty_exception;
+  8      END IF;
+  9  EXCEPTION
+ 10       WHEN qty_exception THEN
+ 11            DBMS_OUTPUT.PUT_LINE('quantity cannot be negative');
+ 12            update inventory set quantity=0;
+ 13* END;
+SQL> /
+Enter value for id: 1002
+old   3:     id number:=&id;
+new   3:     id number:=1002;
+
+PL/SQL procedure successfully completed.
