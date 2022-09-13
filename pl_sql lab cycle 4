@@ -1,0 +1,63 @@
+1.Write a stored procedure, raise_salary which accepts an employee number, increment and modifies salary of that employee in employee table.
+Modified salary = salary increase amount+ current salary. If employee number is not found or if the current salary is null, it should raise an exception.
+Otherwise, updates the salary.
+
+
+
+
+
+
+3.Write a PL/SQL block that computes increment of an employee in employee table by using incr function which takes employee number as argument,
+calculates increment and returns the same based on the following criteria:
+	If salary <= 3000 – increment = 30% of salary
+	If salary > 3000 and <= 6000– increment = 20% of salary
+	Else increment = 10% of salary. 
+
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------
+      7788 SCOTT      ANALYST         7566 09-DEC-82       3200                    20
+      7876 ADAMS      CLERK           7788 12-JAN-83       1100                    20
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
+
+14 rows selected.
+SQL> ed
+Wrote file afiedt.buf
+
+  1   CREATE OR REPLACE FUNCTION incr (eno number) RETURN number AS
+  2      salary number;
+  3      inc number;
+  4   BEGIN
+  5      select sal into salary from emp where empno=eno;
+  6      IF salary<=3000 THEN
+  7              inc:=0.3*salary;
+  8      ELSIF salary>3000 and salary<=6000 THEN
+  9              inc:=0.2*salary;
+ 10      ELSE
+ 11              inc:=0.1*salary;
+ 12      END IF;
+ 13   RETURN inc;
+ 14*  END;
+SQL> /
+
+Function created.
+
+SQL> EXEC DBMS_OUTPUT.PUT_LINE(incr(7839));
+1000
+
+PL/SQL procedure successfully completed.
