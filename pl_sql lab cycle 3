@@ -669,45 +669,112 @@ Tr_type is D – deposit W – withdrawal
 Write a PL/SQL block to update master table’s (i.e., Bank_Main) curr_balance field with transaction details from transaction file (i.e., Bank_Trans)
 and also change the status of the Upd_flag field of transaction table to ‘Y’ once the updation is complete.
 
-SQL> create table bank_main(acc_no number,name varchar(20),address varchar(30),acc_type varchar(10),
+SQL> create table bank_main(acc_no number,name varchar(20),address varchar(30),acc_type varchar(1
 curr_bal number);
 
 Table created.
 
-SQL> create table bank_trans(acc_no number,tr_type varchar(10),tr_date Date,tr_amt number,upd_flag v
+SQL> create table bank_trans(acc_no number,tr_type varchar(10),tr_date Date,tr_amt number,upd_fla
 archar(5));
 
 Table created.
 
-SQL> insert into bank_main values(1001,'prapurna','guntur','current',100000);
+SQL>  insert into bank_main values('&acc_no','&name','&address','&acc_type','&curr_bal');
+Enter value for acc_no: 133
+Enter value for name: keerthi
+Enter value for address: guntur
+Enter value for acc_type: current
+Enter value for curr_bal: 200
+old   1:  insert into bank_main values('&acc_no','&name','&address','&acc_type','&curr_bal')
+new   1:  insert into bank_main values('133','keerthi','guntur','current','200')
+
+1 row created.
+
+SQL> /
+Enter value for acc_no: 134
+Enter value for name: madhavi
+Enter value for address: nrt
+Enter value for acc_type: savings
+Enter value for curr_bal: 300
+old   1:  insert into bank_main values('&acc_no','&name','&address','&acc_type','&curr_bal')
+new   1:  insert into bank_main values('134','madhavi','nrt','savings','300')
+
+1 row created.
+
+SQL> /
+Enter value for acc_no: 145
+Enter value for name: prapurna
+Enter value for address: gnt
+Enter value for acc_type: savings
+Enter value for curr_bal: 234
+old   1:  insert into bank_main values('&acc_no','&name','&address','&acc_type','&curr_bal')
+new   1:  insert into bank_main values('145','prapurna','gnt','savings','234')
 
 1 row created.
 
 SQL> ed
 Wrote file afiedt.buf
 
-  1* insert into bank_main values(1002,'madhavi','nrt','savings',103000)
+  1*  insert into bank_trans values('&acc_no','&tr_type','&tr_date','&tr_amt','&upd_flag')
 SQL> /
+Enter value for acc_no: 133
+Enter value for tr_type: deposit
+Enter value for tr_date: 27-sep-2022
+Enter value for tr_amt: 300
+Enter value for upd_flag: no
+old   1:  insert into bank_trans values('&acc_no','&tr_type','&tr_date','&tr_amt','&upd_flag')
+new   1:  insert into bank_trans values('133','deposit','27-sep-2022','300','no')
 
 1 row created.
 
-SQL> ed
-Wrote file afiedt.buf
-
-  1* insert into bank_main values(1003,'keerthi','satenapalli','deposit',103030)
 SQL> /
+Enter value for acc_no: 134
+Enter value for tr_type: withdraw
+Enter value for tr_date: 23-sep-2022
+Enter value for tr_amt: 123
+Enter value for upd_flag: no
+old   1:  insert into bank_trans values('&acc_no','&tr_type','&tr_date','&tr_amt','&upd_flag')
+new   1:  insert into bank_trans values('134','withdraw','23-sep-2022','123','no')
 
 1 row created.
 
-SQL> ed
-Wrote file afiedt.buf
-
-  1* insert into bank_main values(1004,'satwika','tenali','check',102320)
 SQL> /
+Enter value for acc_no: 145
+Enter value for tr_type: withdraw
+Enter value for tr_date: 29-sep-2022
+Enter value for tr_amt: 124
+Enter value for upd_flag: no
+old   1:  insert into bank_trans values('&acc_no','&tr_type','&tr_date','&tr_amt','&upd_flag')
+new   1:  insert into bank_trans values('145','withdraw','29-sep-2022','124','no')
 
 1 row created.
 
-
+DECLARE
+ myacc_no bank_main.acc_no%type;
+ myname bank_main.name%type;
+ mybal bank_main.curr_bal%type;
+ mytr_type bank_trans.tr_type%type;
+ mytr_amt bank_trans.tr_amt%type;
+ myupd_flag bank_trans.upd_flag%type;
+ cursor cr is
+ select tr_amt,tr_type,acc_no from bank_trans;
+ BEGIN
+ open cr;
+       loop
+ fetch cr into mytr_amt,mytr_type,myacc_no;
+       select curr_bal into mybal from bank_main where acc_no=myacc_no;
+       if mytr_type='deposit' then
+    mybal:=mybal+mytr_amt;
+       end if;
+ if mytr_type='withdraw' then
+    mybal:=mybal-mytr_amt;
+       end if;
+ exit when cr%notfound;
+       update bank_main set curr_bal=mybal where acc_no=myacc_no;
+ update bank_trans set upd_flag='y' where acc_no=myacc_no;
+ end loop;
+ end;
+/
 
 
 
